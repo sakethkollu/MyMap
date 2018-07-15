@@ -3,6 +3,9 @@ import datetime
 import platform
 import pandas as pd
 import pprint
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.basemap import Basemap
 
 class MapData:
 
@@ -59,4 +62,36 @@ class MapData:
 
 if __name__ == '__main__':
     sakethData = MapData("data/Location History.json")
-    print(sakethData.getPositionAtTime(152858000000))
+
+
+    # define map colors
+    land_color = '#f5f5f3'
+    water_color = '#cdd2d4'
+    coastline_color = '#f5f5f3'
+    border_color = '#bbbbbb'
+    meridian_color = '#f5f5f3'
+    marker_fill_color = '#cc3300'
+    marker_edge_color = 'None'
+
+    # create the plot
+    fig = plt.figure(figsize=(20, 10))
+
+    # draw the basemap and its features
+    m = Basemap(width=12000000, height=9000000, projection='lcc',
+                resolution='c', lat_1=50., lat_2=55, lat_0=50, lon_0=-107.)
+    m.drawmapboundary(color=border_color, fill_color=water_color)
+    m.drawcoastlines(color=coastline_color)
+    m.drawcountries(color=border_color)
+    m.fillcontinents(color=land_color, lake_color=water_color)
+    m.drawparallels(np.arange(-90., 120., 30.), color=meridian_color)
+    m.drawmeridians(np.arange(0., 420., 60.), color=meridian_color)
+
+    m.drawstates()
+    m.bluemarble()
+
+    # project the location history points then scatter plot them
+    x, y = m(sakethData.PARSEDJSON['longitudes'].values, sakethData.PARSEDJSON['latitudes'].values)
+    m.scatter(x, y, s=8, color=marker_fill_color, edgecolor=marker_edge_color, alpha=1, zorder=3)
+
+    # show the map
+    plt.show()
