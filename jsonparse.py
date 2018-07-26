@@ -78,7 +78,7 @@ if __name__ == '__main__':
 
     # draw the basemap and its features
     m = Basemap(width=12000000, height=9000000, projection='lcc',
-                resolution='c', lat_1=50., lat_2=55, lat_0=50, lon_0=-107.)
+                resolution='i', lat_1=50., lat_2=55, lat_0=50, lon_0=-107.)
     m.drawmapboundary(color=border_color, fill_color=water_color)
     m.drawcoastlines(color=coastline_color)
     m.drawcountries(color=border_color)
